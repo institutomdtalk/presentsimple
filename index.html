@@ -20,870 +20,324 @@
   --gold-pale:   #DEC882;
   --gold-faint:  #F6F0E4;
   --cream:       #F5F0E8;
-  --cream-warm:  #FFFFFF;
+  --cream-warm:  #FAF8F4;
   --cream-mid:   #EDE8DE;
   --muted:       #6B7280;
   --rule:        rgba(27,42,74,0.09);
 }
 
 html { scroll-behavior: smooth; }
+body { background: var(--cream-warm); color: var(--navy); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
 
-body {
-  background: var(--cream-warm);
-  color: var(--navy);
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  overflow-x: hidden;
-}
-
-/* ═══════════════════════════════
-   PIN SCREEN
-═══════════════════════════════ */
+/* ═══ PIN ═══ */
 #pin-screen {
-  position: fixed; inset: 0;
-  z-index: 9999;
+  position: fixed; inset: 0; z-index: 9999;
   background: var(--navy-deep);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   transition: opacity 0.9s ease, transform 0.9s ease;
 }
-
 #pin-screen::before {
-  content: '';
-  position: absolute; inset: 0;
+  content: ''; position: absolute; inset: 0;
   background-image: radial-gradient(circle, rgba(184,150,62,0.12) 1px, transparent 1px);
-  background-size: 44px 44px;
-  pointer-events: none;
+  background-size: 44px 44px; pointer-events: none;
 }
-
 #pin-screen::after {
-  content: '';
-  position: absolute; inset: 0;
+  content: ''; position: absolute; inset: 0;
   background: radial-gradient(ellipse 65% 55% at 15% 30%, rgba(184,150,62,0.06) 0%, transparent 65%);
   pointer-events: none;
 }
-
-#pin-screen.unlocking {
-  opacity: 0;
-  transform: scale(1.03);
-  pointer-events: none;
-}
-
-.pin-inner {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column;
-  align-items: center;
-}
-
-.pin-eyebrow {
-  display: flex; align-items: center; gap: 16px;
-  margin-bottom: 2.5rem;
-  opacity: 0; animation: slideRight 0.9s ease 0.3s forwards;
-}
-
+#pin-screen.unlocking { opacity: 0; transform: scale(1.03); pointer-events: none; }
+.pin-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+.pin-eyebrow { display: flex; align-items: center; gap: 16px; margin-bottom: 2.5rem; opacity: 0; animation: slideRight 0.9s ease 0.3s forwards; }
 .pin-eyebrow-line { width: 28px; height: 1px; background: var(--gold); }
-
-.pin-eyebrow-text {
-  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--gold); font-weight: 400;
-}
-
-.pin-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.2rem, 6vw, 3.5rem);
-  font-weight: 300; line-height: 1.05;
-  color: var(--cream);
-  text-align: center; margin-bottom: 0.4rem;
-  letter-spacing: -0.02em;
-  opacity: 0; animation: slideRight 1s ease 0.5s forwards;
-}
-
+.pin-eyebrow-text { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 400; }
+.pin-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 6vw, 3.5rem); font-weight: 300; line-height: 1.05; color: var(--cream); text-align: center; margin-bottom: 0.4rem; letter-spacing: -0.02em; opacity: 0; animation: slideRight 1s ease 0.5s forwards; }
 .pin-title em { font-style: italic; color: var(--gold-light); }
-
-.pin-sub {
-  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(184,150,62,0.45); margin-bottom: 3rem;
-  opacity: 0; animation: appear 1s ease 0.7s forwards;
-}
-
-.pin-rule {
-  width: 36px; height: 1px;
-  background: rgba(184,150,62,0.3);
-  margin-bottom: 3rem;
-  opacity: 0; animation: appear 1s ease 0.65s forwards;
-}
-
-.pin-label {
-  font-size: 9px; letter-spacing: 3.5px; text-transform: uppercase;
-  color: rgba(245,240,232,0.28); margin-bottom: 1.4rem;
-  opacity: 0; animation: appear 1s ease 0.85s forwards;
-}
-
-.pin-dots {
-  display: flex; gap: 1rem; margin-bottom: 2.5rem;
-  opacity: 0; animation: appear 1s ease 0.95s forwards;
-}
-
-.pin-dot {
-  width: 12px; height: 12px; border-radius: 50%;
-  border: 1px solid rgba(184,150,62,0.35);
-  background: transparent;
-  transition: background 0.2s, border-color 0.25s, transform 0.18s;
-}
-
-.pin-dot.filled {
-  background: var(--gold); border-color: var(--gold);
-  transform: scale(1.15);
-}
-
-.pin-keypad {
-  display: grid; grid-template-columns: repeat(3, 68px);
-  gap: 0.7rem;
-  opacity: 0; animation: appear 1s ease 1.05s forwards;
-}
-
-.pin-key {
-  width: 68px; height: 68px; border-radius: 50%;
-  border: 1px solid rgba(184,150,62,0.18);
-  background: rgba(255,255,255,0.03);
-  color: var(--cream);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem; font-weight: 300;
-  cursor: pointer;
-  transition: background 0.18s, border-color 0.18s, transform 0.12s;
-  display: flex; align-items: center; justify-content: center;
-  -webkit-tap-highlight-color: transparent;
-}
-
+.pin-sub { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(184,150,62,0.45); margin-bottom: 3rem; opacity: 0; animation: appear 1s ease 0.7s forwards; }
+.pin-rule { width: 36px; height: 1px; background: rgba(184,150,62,0.3); margin-bottom: 3rem; opacity: 0; animation: appear 1s ease 0.65s forwards; }
+.pin-label { font-size: 9px; letter-spacing: 3.5px; text-transform: uppercase; color: rgba(245,240,232,0.28); margin-bottom: 1.4rem; opacity: 0; animation: appear 1s ease 0.85s forwards; }
+.pin-dots { display: flex; gap: 1rem; margin-bottom: 2.5rem; opacity: 0; animation: appear 1s ease 0.95s forwards; }
+.pin-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(184,150,62,0.35); background: transparent; transition: background 0.2s, border-color 0.25s, transform 0.18s; }
+.pin-dot.filled { background: var(--gold); border-color: var(--gold); transform: scale(1.15); }
+.pin-keypad { display: grid; grid-template-columns: repeat(3, 68px); gap: 0.7rem; opacity: 0; animation: appear 1s ease 1.05s forwards; }
+.pin-key { width: 68px; height: 68px; border-radius: 50%; border: 1px solid rgba(184,150,62,0.18); background: rgba(255,255,255,0.03); color: var(--cream); font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; cursor: pointer; transition: background 0.18s, border-color 0.18s, transform 0.12s; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
 .pin-key:hover { background: rgba(184,150,62,0.08); border-color: rgba(184,150,62,0.35); }
 .pin-key.pressed { background: rgba(184,150,62,0.14); border-color: rgba(184,150,62,0.5); transform: scale(0.92); }
 .pin-key.key-empty { border: none; background: transparent; pointer-events: none; }
 .pin-key.key-del { font-family: 'DM Sans', sans-serif; font-size: 1rem; color: rgba(245,240,232,0.4); }
-
-.pin-error {
-  margin-top: 1.4rem;
-  font-size: 10px; letter-spacing: 2px;
-  color: rgba(220,100,100,0.7); opacity: 0;
-  transition: opacity 0.3s; text-align: center;
-}
+.pin-error { margin-top: 1.4rem; font-size: 10px; letter-spacing: 2px; color: rgba(220,100,100,0.7); opacity: 0; transition: opacity 0.3s; text-align: center; }
 .pin-error.show { opacity: 1; }
 
-/* ═══════════════════════════════
-   PAGE REVEAL
-═══════════════════════════════ */
-#page {
-  opacity: 0; transform: translateY(18px);
-  transition: opacity 1.1s ease 0.15s, transform 1.1s ease 0.15s;
-  pointer-events: none;
-}
-
+/* ═══ PAGE ═══ */
+#page { opacity: 0; transform: translateY(18px); transition: opacity 1.1s ease 0.15s, transform 1.1s ease 0.15s; pointer-events: none; }
 #page.revealed { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
-/* ═══════════════════════════════
-   HEADER
-═══════════════════════════════ */
-header {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 100; padding: 26px 60px;
-  display: flex; justify-content: space-between; align-items: center;
-  transition: background 0.4s, box-shadow 0.4s;
-}
-
-header.scrolled {
-  background: rgba(250,247,242,0.96);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 1px 0 var(--rule);
-}
-
-.header-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 13px; font-weight: 400;
-  letter-spacing: 3.5px; text-transform: uppercase;
-  color: var(--cream); text-decoration: none;
-  transition: color 0.3s;
-}
-
+/* ═══ HEADER ═══ */
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 26px 60px; display: flex; justify-content: space-between; align-items: center; transition: background 0.4s, box-shadow 0.4s; }
+header.scrolled { background: rgba(250,248,244,0.96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--rule); }
+.header-logo { font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 400; letter-spacing: 3.5px; text-transform: uppercase; color: var(--cream); text-decoration: none; transition: color 0.3s; }
 header.scrolled .header-logo { color: var(--navy); }
-
-.header-nav {
-  display: flex; gap: 32px;
-}
-
-.header-nav a {
-  font-size: 10px; font-weight: 400;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  color: rgba(245,240,232,0.4); text-decoration: none;
-  transition: color 0.25s;
-}
-
+.header-nav { display: flex; gap: 28px; }
+.header-nav a { font-size: 10px; font-weight: 400; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(245,240,232,0.4); text-decoration: none; transition: color 0.25s; }
 header.scrolled .header-nav a { color: var(--muted); }
 .header-nav a:hover { color: var(--gold-light) !important; }
 .header-nav a.active { color: var(--gold) !important; }
 
-/* ═══════════════════════════════
-   HERO / OPENING
-═══════════════════════════════ */
-.opening {
-  min-height: 100vh;
-  background: var(--navy-deep);
-  display: grid; grid-template-rows: 1fr auto;
-  position: relative; overflow: hidden;
-}
-
-.opening::before {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 65% 55% at 15% 30%, rgba(184,150,62,0.08) 0%, transparent 65%),
-    radial-gradient(ellipse 60% 70% at 95% 95%, rgba(15,26,48,0.95) 0%, transparent 55%);
-  pointer-events: none; z-index: 1;
-}
-
-.opening::after {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: radial-gradient(circle, rgba(184,150,62,0.12) 1px, transparent 1px);
-  background-size: 44px 44px;
-  pointer-events: none; z-index: 1;
-}
-
-.opening-body {
-  position: relative; z-index: 2;
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: flex-start;
-  padding: 140px 10vw 80px;
-}
-
-.eyebrow {
-  display: flex; align-items: center; gap: 18px;
-  margin-bottom: 48px;
-  opacity: 0; animation: slideRight 1s ease 0.3s forwards;
-}
-
+/* ═══ HERO ═══ */
+.opening { min-height: 100vh; background: var(--navy-deep); display: grid; grid-template-rows: 1fr auto; position: relative; overflow: hidden; }
+.opening::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 15% 30%, rgba(184,150,62,0.08) 0%, transparent 65%), radial-gradient(ellipse 60% 70% at 95% 95%, rgba(15,26,48,0.95) 0%, transparent 55%); pointer-events: none; z-index: 1; }
+.opening::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(184,150,62,0.12) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 1; }
+.opening-body { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 140px 10vw 80px; }
+.eyebrow { display: flex; align-items: center; gap: 18px; margin-bottom: 48px; opacity: 0; animation: slideRight 1s ease 0.3s forwards; }
 .eyebrow-line { width: 36px; height: 1px; background: var(--gold); }
-
-.eyebrow-text {
-  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--gold); font-weight: 400;
-}
-
-.opening h1 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(50px, 7vw, 96px);
-  font-weight: 300; line-height: 1.0;
-  color: var(--cream);
-  margin-bottom: 32px; letter-spacing: -0.02em;
-  opacity: 0; animation: slideRight 1.1s ease 0.5s forwards;
-}
-
+.eyebrow-text { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 400; }
+.opening h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 7vw, 96px); font-weight: 300; line-height: 1.0; color: var(--cream); margin-bottom: 32px; letter-spacing: -0.02em; opacity: 0; animation: slideRight 1.1s ease 0.5s forwards; }
 .opening h1 em { font-style: italic; color: var(--gold-light); display: block; }
-
-.opening-desc {
-  max-width: 500px; font-size: 15px; font-weight: 300;
-  line-height: 1.9; color: rgba(245,240,232,0.45);
-  opacity: 0; animation: slideRight 1.1s ease 0.7s forwards;
-}
-
-.opening-footer {
-  position: relative; z-index: 2;
-  display: flex; justify-content: space-between; align-items: flex-end;
-  padding: 0 10vw 52px;
-  opacity: 0; animation: appear 1.2s ease 1.2s forwards;
-}
-
+.opening-desc { max-width: 500px; font-size: 15px; font-weight: 300; line-height: 1.9; color: rgba(245,240,232,0.45); opacity: 0; animation: slideRight 1.1s ease 0.7s forwards; }
+.opening-footer { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10vw 52px; opacity: 0; animation: appear 1.2s ease 1.2s forwards; }
 .opening-scroll { display: flex; align-items: center; gap: 14px; }
-
-.scroll-label {
-  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(184,150,62,0.4); writing-mode: vertical-lr;
-}
-
-.scroll-track {
-  width: 1px; height: 56px;
-  background: rgba(184,150,62,0.15);
-  position: relative; overflow: hidden;
-}
-
-.scroll-thumb {
-  position: absolute; top: -100%;
-  width: 100%; height: 50%;
-  background: var(--gold);
-  animation: scrollDown 2.4s ease infinite;
-}
-
+.scroll-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(184,150,62,0.4); writing-mode: vertical-lr; }
+.scroll-track { width: 1px; height: 56px; background: rgba(184,150,62,0.15); position: relative; overflow: hidden; }
+.scroll-thumb { position: absolute; top: -100%; width: 100%; height: 50%; background: var(--gold); animation: scrollDown 2.4s ease infinite; }
 .opening-tag { text-align: right; }
+.tag-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(184,150,62,0.35); display: block; margin-bottom: 6px; }
+.tag-value { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: rgba(245,240,232,0.18); }
 
-.tag-label {
-  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(184,150,62,0.35); display: block; margin-bottom: 6px;
-}
+/* ═══ LAYOUT ═══ */
+.page-body { max-width: 860px; margin: 0 auto; padding: 80px 60px 100px; }
 
-.tag-value {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px; font-style: italic;
-  color: rgba(245,240,232,0.18);
-}
-
-/* ═══════════════════════════════
-   LAYOUT
-═══════════════════════════════ */
-.page-body {
-  display: grid; grid-template-columns: 1fr 290px;
-  max-width: 1200px; margin: 0 auto;
-  padding: 0 60px 100px;
-}
-
-.main-content {
-  padding: 100px 60px 60px 0;
-  border-right: 1px solid var(--rule);
-}
-
-.sidebar {
-  padding: 100px 0 60px 48px;
-  position: sticky; top: 90px; align-self: start;
-}
-
-/* ═══════════════════════════════
-   SECTIONS
-═══════════════════════════════ */
-.section {
-  margin-bottom: 90px;
-  opacity: 0; transform: translateY(22px);
-  transition: opacity 0.75s ease, transform 0.75s ease;
-}
-
+/* ═══ SECTION HEADER ═══ */
+.section { margin-bottom: 20px; opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .section.revealed { opacity: 1; transform: translateY(0); }
+.section-kicker { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: block; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.8vw, 32px); font-weight: 300; color: var(--navy); line-height: 1.15; margin-bottom: 20px; padding-bottom: 20px; position: relative; }
+.section-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 36px; height: 1px; background: var(--gold); }
 
-.section-kicker {
-  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 18px; display: block;
-}
+/* ═══ ACCORDION ═══ */
+.acc-list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--rule); }
 
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(26px, 3vw, 38px);
-  font-weight: 300; color: var(--navy);
-  line-height: 1.15; margin-bottom: 40px;
-  position: relative; padding-bottom: 28px;
-}
+.acc-item { border-bottom: 1px solid var(--rule); }
 
-.section-title::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0;
-  width: 36px; height: 1px; background: var(--gold);
-}
-
-/* ═══════════════════════════════
-   PHASE BLOCKS
-═══════════════════════════════ */
-.phase-block {
-  border-top: 1px solid var(--rule);
-  padding: 40px 0;
+.acc-trigger {
+  width: 100%; display: flex; align-items: center;
+  justify-content: space-between; gap: 20px;
+  padding: 22px 0; cursor: pointer; background: none; border: none;
+  text-align: left; -webkit-tap-highlight-color: transparent;
   transition: background 0.2s;
 }
 
-.phase-block:last-of-type { border-bottom: 1px solid var(--rule); }
+.acc-trigger:hover { background: none; }
+.acc-trigger:hover .acc-trigger-label { color: var(--gold); }
 
-.phase-block-head {
-  display: grid; grid-template-columns: 48px 1fr;
-  gap: 0; margin-bottom: 28px;
-}
+.acc-trigger-left { display: flex; align-items: center; gap: 20px; }
 
-.phase-roman {
+.acc-num {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 12px; font-style: italic;
-  color: var(--gold); letter-spacing: 1px; padding-top: 4px;
+  font-size: 11px; font-style: italic; color: var(--gold);
+  letter-spacing: 1px; min-width: 24px;
 }
 
-.phase-block-name {
+.acc-trigger-label {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(20px, 2.2vw, 26px);
-  font-weight: 400; color: var(--navy);
-  line-height: 1.2;
+  font-size: clamp(15px, 2vw, 19px); font-weight: 400;
+  color: var(--navy); line-height: 1.3; transition: color 0.2s;
 }
 
-.phase-block-name em { font-style: italic; font-weight: 300; color: var(--navy-soft); }
+.acc-trigger-label em { font-style: italic; font-weight: 300; color: var(--navy-soft); }
 
-.sentence-group {
-  padding-left: 48px;
-  border-left: 1px solid var(--rule);
-  display: flex; flex-direction: column; gap: 0;
+.acc-icon {
+  width: 20px; height: 20px; flex-shrink: 0;
+  border: 1px solid rgba(184,150,62,0.3); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s, border-color 0.25s, transform 0.35s;
+  position: relative;
 }
 
-.sentence-row {
-  display: grid; grid-template-columns: 80px 1fr;
-  gap: 1rem; padding: 12px 16px;
-  transition: background 0.18s;
+.acc-icon::before,
+.acc-icon::after {
+  content: ''; position: absolute;
+  background: var(--gold); border-radius: 2px;
+  transition: transform 0.35s ease, opacity 0.25s;
 }
 
+.acc-icon::before { width: 8px; height: 1px; }
+.acc-icon::after  { width: 1px; height: 8px; }
+
+.acc-item.open .acc-icon { background: var(--gold); border-color: var(--gold); transform: rotate(45deg); }
+.acc-item.open .acc-icon::before,
+.acc-item.open .acc-icon::after { background: var(--navy-deep); }
+
+.acc-body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
+  opacity: 0;
+}
+
+.acc-item.open .acc-body { max-height: 2000px; opacity: 1; }
+
+.acc-content { padding: 0 0 32px 44px; }
+
+/* ═══ SENTENCE ROWS ═══ */
+.sentence-group { display: flex; flex-direction: column; border-left: 1px solid var(--rule); }
+.sentence-row { display: grid; grid-template-columns: 76px 1fr; gap: 1rem; padding: 11px 14px; transition: background 0.18s; }
 .sentence-row:hover { background: var(--gold-faint); }
-
-.s-type {
-  font-size: 9px; font-weight: 400;
-  letter-spacing: 2px; text-transform: uppercase;
-  padding-top: 4px;
-}
-
-.sentence-row.aff .s-type { color: rgba(27,42,74,0.4); }
-.sentence-row.q   .s-type { color: rgba(184,150,62,0.8); }
+.s-type { font-size: 9px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; padding-top: 4px; }
+.sentence-row.aff .s-type { color: rgba(27,42,74,0.35); }
+.sentence-row.q   .s-type { color: rgba(184,150,62,0.85); }
 .sentence-row.neg .s-type { color: rgba(90,30,30,0.5); }
-
-.s-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.15rem; font-weight: 400;
-  color: var(--navy); line-height: 1.55;
-}
-
-.aux {
-  font-weight: 600; font-style: normal;
-  background: rgba(184,150,62,0.14);
-  color: var(--navy-mid);
-  padding: 0.04em 0.28em; border-radius: 2px;
-}
-
-.aux-does {
-  font-weight: 600; font-style: normal;
-  background: rgba(27,42,74,0.08);
-  color: var(--navy-soft);
-  padding: 0.04em 0.28em; border-radius: 2px;
-}
-
+.s-text { font-family: 'Cormorant Garamond', serif; font-size: 1.12rem; font-weight: 400; color: var(--navy); line-height: 1.55; }
+.aux { font-weight: 600; font-style: normal; background: rgba(184,150,62,0.14); color: var(--navy-mid); padding: 0.04em 0.28em; border-radius: 2px; }
+.aux-does { font-weight: 600; font-style: normal; background: rgba(27,42,74,0.08); color: var(--navy-soft); padding: 0.04em 0.28em; border-radius: 2px; }
 .strike { text-decoration: line-through; opacity: 0.35; }
 
-/* ═══════════════════════════════
-   GOLDEN RULE
-═══════════════════════════════ */
+/* ═══ GOLDEN RULE ═══ */
 .golden-rule {
-  background: var(--navy-mid);
-  padding: 40px 48px; margin: 48px 0;
-  position: relative; overflow: hidden;
+  background: var(--navy-mid); padding: 32px 40px;
+  margin: 24px 0; position: relative; overflow: hidden;
 }
-
-.golden-rule::before {
-  content: '"';
-  position: absolute; right: 32px; top: -10px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 120px; line-height: 1;
-  color: rgba(184,150,62,0.07); pointer-events: none;
-}
-
-.golden-rule::after {
-  content: '';
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 2px;
-  background: linear-gradient(90deg, var(--gold), transparent);
-}
-
-.gr-label {
-  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 16px; display: block;
-}
-
-.gr-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.15rem; font-style: italic;
-  color: var(--cream); line-height: 1.75; font-weight: 300;
-}
-
+.golden-rule::before { content: '"'; position: absolute; right: 24px; top: -12px; font-family: 'Cormorant Garamond', serif; font-size: 100px; line-height: 1; color: rgba(184,150,62,0.07); pointer-events: none; }
+.golden-rule::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+.gr-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+.gr-text { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; color: var(--cream); line-height: 1.75; font-weight: 300; }
 .gr-text strong { font-style: normal; font-weight: 500; color: var(--gold-pale); }
 
-/* ═══════════════════════════════
-   QUESTION WORDS
-═══════════════════════════════ */
-.qw-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 1px; background: var(--rule);
-  margin-top: 40px;
-}
-
-.qw-cell {
-  background: var(--cream-warm);
-  padding: 24px 28px;
-  transition: background 0.2s;
-}
-
+/* ═══ QUESTION WORDS ═══ */
+.qw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); margin-top: 20px; }
+.qw-cell { background: var(--cream-warm); padding: 20px 24px; transition: background 0.2s; }
 .qw-cell:hover { background: var(--gold-faint); }
-
-.qw-word {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.2rem; font-weight: 500; color: var(--navy);
-  margin-bottom: 4px;
-}
-
-.qw-pt {
-  font-size: 11px; font-weight: 300;
-  color: var(--muted); margin-bottom: 10px;
-}
-
-.qw-sub-item {
-  font-size: 11px; font-weight: 300; color: var(--navy-soft);
-  display: flex; align-items: baseline; gap: 6px; padding: 2px 0;
-}
-
+.qw-word { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 500; color: var(--navy); margin-bottom: 3px; }
+.qw-pt { font-size: 11px; font-weight: 300; color: var(--muted); margin-bottom: 8px; }
+.qw-sub-item { font-size: 11px; font-weight: 300; color: var(--navy-soft); display: flex; align-items: baseline; gap: 6px; padding: 2px 0; }
 .qw-sub-item::before { content: '—'; opacity: 0.3; font-size: 10px; }
 .qw-sub-pt { color: var(--muted); font-style: italic; }
 
-/* ═══════════════════════════════
-   DIALOGUE
-═══════════════════════════════ */
-.dialogue-block {
-  background: var(--cream);
-  padding: 32px 40px; margin: 36px 0;
-  border-left: 2px solid rgba(184,150,62,0.3);
-}
-
-.d-line {
-  display: grid; grid-template-columns: 44px 1fr;
-  gap: 1rem; margin-bottom: 18px; align-items: start;
-}
-
+/* ═══ DIALOGUE ═══ */
+.dialogue-block { background: var(--cream); padding: 28px 36px; margin-top: 20px; border-left: 2px solid rgba(184,150,62,0.3); }
+.d-line { display: grid; grid-template-columns: 40px 1fr; gap: 1rem; margin-bottom: 16px; align-items: start; }
 .d-line:last-child { margin-bottom: 0; }
+.d-speaker { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 400; padding-top: 4px; }
+.d-text { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--navy); line-height: 1.6; }
+.pronun { font-size: 11px; color: var(--muted); font-style: italic; margin-left: 6px; }
 
-.d-speaker {
-  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--gold); font-weight: 400; padding-top: 4px;
-}
-
-.d-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem; color: var(--navy); line-height: 1.6;
-}
-
-.pronun {
-  font-size: 11px; color: var(--muted); font-style: italic; margin-left: 6px;
-}
-
-/* ═══════════════════════════════
-   VERB PILLS
-═══════════════════════════════ */
-.verb-strip {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
-}
-
-.verb-pill {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem; font-style: italic; color: var(--navy-soft);
-  border: 1px solid var(--cream-mid);
-  padding: 6px 16px; background: var(--cream);
-  transition: all 0.2s; cursor: default;
-}
-
+/* ═══ VERB PILLS ═══ */
+.verb-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.verb-pill { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-style: italic; color: var(--navy-soft); border: 1px solid var(--cream-mid); padding: 6px 16px; background: var(--cream); transition: all 0.2s; cursor: default; }
 .verb-pill:hover { background: var(--navy); color: var(--cream); border-color: var(--navy); }
 
-/* ═══════════════════════════════
-   ANSWERS
-═══════════════════════════════ */
-.answer-pair { display: flex; gap: 12px; margin-top: 20px; }
+/* ═══ ANSWER CARDS ═══ */
+.answer-pair { display: flex; gap: 12px; margin-top: 16px; }
+.answer-card { flex: 1; text-align: center; padding: 16px; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; border: 1px solid var(--cream-mid); background: var(--cream); color: var(--navy); }
 
-.answer-card {
-  flex: 1; text-align: center; padding: 16px;
-  font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+/* ═══ DO vs MAKE adendo ═══ */
+.adendo {
+  border-left: 2px solid rgba(184,150,62,0.25);
+  padding: 20px 24px; margin-top: 20px;
+  background: var(--gold-faint);
 }
+.adendo-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: block; }
+.adendo-row { display: flex; gap: 32px; flex-wrap: wrap; }
+.adendo-item { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--navy); line-height: 1.7; }
+.adendo-item strong { font-weight: 600; color: var(--navy-mid); }
+.adendo-item em { font-style: italic; color: var(--muted); font-size: 0.9em; }
 
-.answer-yes { background: var(--cream); border: 1px solid var(--cream-mid); color: var(--navy); }
-.answer-no  { background: var(--cream); border: 1px solid var(--cream-mid); color: var(--navy-soft); }
-
-/* ═══════════════════════════════
-   SIDEBAR
-═══════════════════════════════ */
-.sidebar-note {
-  padding: 24px 0 24px 24px;
-  border-left: 2px solid var(--cream-mid);
-  margin-bottom: 28px;
-  transition: border-color 0.3s;
-}
-
-.sidebar-note:hover { border-left-color: var(--gold-pale); }
-
-.sn-label {
-  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 10px; display: block;
-}
-
-.sn-text {
-  font-size: 13.5px; font-weight: 300;
-  color: var(--muted); line-height: 1.85;
-}
-
-.sn-text strong { font-weight: 400; color: var(--navy); }
-.sn-text em { color: var(--gold); font-style: italic; }
-
-/* ═══════════════════════════════
-   QUIZ
-═══════════════════════════════ */
-#quiz {
-  background: var(--navy-deep);
-  padding: 110px 0; position: relative;
-}
-
-#quiz::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: radial-gradient(circle, rgba(184,150,62,0.10) 1px, transparent 1px);
-  background-size: 44px 44px;
-  pointer-events: none;
-}
-
-.quiz-inner {
-  max-width: 800px; margin: 0 auto;
-  padding: 0 60px; position: relative; z-index: 1;
-}
-
-.quiz-header {
-  margin-bottom: 70px;
-  padding-bottom: 50px;
-  border-bottom: 1px solid rgba(184,150,62,0.12);
-}
-
+/* ═══ QUIZ ═══ */
+#quiz { background: var(--navy-deep); padding: 110px 0; position: relative; }
+#quiz::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(184,150,62,0.10) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; }
+.quiz-inner { max-width: 800px; margin: 0 auto; padding: 0 60px; position: relative; z-index: 1; }
+.quiz-header { margin-bottom: 60px; padding-bottom: 44px; border-bottom: 1px solid rgba(184,150,62,0.12); }
 .quiz-header .section-kicker { color: rgba(184,150,62,0.6); }
-
-.quiz-header h2 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 300; color: var(--cream);
-  line-height: 1.1; margin-bottom: 12px;
-}
-
+.quiz-header h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 48px); font-weight: 300; color: var(--cream); line-height: 1.1; margin-bottom: 10px; }
 .quiz-header h2 em { font-style: italic; color: var(--gold-light); }
-
-.quiz-header p {
-  font-size: 13px; font-weight: 300;
-  color: rgba(245,240,232,0.3); letter-spacing: 0.5px;
-}
-
-.quiz-item {
-  border-top: 1px solid rgba(184,150,62,0.08);
-  padding: 36px 0;
-}
-
+.quiz-header p { font-size: 13px; font-weight: 300; color: rgba(245,240,232,0.3); }
+.quiz-item { border-top: 1px solid rgba(184,150,62,0.08); padding: 32px 0; }
 .quiz-item:last-of-type { border-bottom: 1px solid rgba(184,150,62,0.08); }
-
-.q-num {
-  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(184,150,62,0.45); margin-bottom: 14px;
-}
-
-.q-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.2rem; color: rgba(245,240,232,0.88);
-  margin-bottom: 22px; line-height: 1.5;
-}
-
-.q-options { display: flex; flex-direction: column; gap: 8px; }
-
-.q-option {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px 16px;
-  border: 1px solid rgba(184,150,62,0.1);
-  background: rgba(255,255,255,0.02);
-  cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-}
-
+.q-num { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(184,150,62,0.45); margin-bottom: 12px; }
+.q-text { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: rgba(245,240,232,0.88); margin-bottom: 20px; line-height: 1.5; }
+.q-options { display: flex; flex-direction: column; gap: 7px; }
+.q-option { display: flex; align-items: center; gap: 14px; padding: 11px 16px; border: 1px solid rgba(184,150,62,0.1); background: rgba(255,255,255,0.02); cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
 .q-option:hover { background: rgba(184,150,62,0.06); border-color: rgba(184,150,62,0.25); }
-
-.q-option input[type="radio"] {
-  appearance: none; width: 14px; height: 14px;
-  border: 1px solid rgba(184,150,62,0.35); border-radius: 50%;
-  flex-shrink: 0; cursor: pointer; transition: all 0.2s;
-}
-
-.q-option input[type="radio"]:checked {
-  border-color: var(--gold); background: var(--gold);
-  box-shadow: inset 0 0 0 3px var(--navy-deep);
-}
-
-.q-option label {
-  font-size: 14px; font-weight: 300;
-  color: rgba(245,240,232,0.6); cursor: pointer; line-height: 1.5;
-}
-
+.q-option input[type="radio"] { appearance: none; width: 14px; height: 14px; border: 1px solid rgba(184,150,62,0.35); border-radius: 50%; flex-shrink: 0; cursor: pointer; transition: all 0.2s; }
+.q-option input[type="radio"]:checked { border-color: var(--gold); background: var(--gold); box-shadow: inset 0 0 0 3px var(--navy-deep); }
+.q-option label { font-size: 14px; font-weight: 300; color: rgba(245,240,232,0.6); cursor: pointer; line-height: 1.45; }
 .q-option.correct { background: rgba(40,80,50,0.2); border-color: rgba(60,120,70,0.4); }
 .q-option.correct label { color: rgba(160,220,160,0.9); }
 .q-option.wrong { background: rgba(100,30,30,0.18); border-color: rgba(150,50,50,0.35); }
 .q-option.wrong label { color: rgba(220,150,150,0.9); }
-
-.q-feedback {
-  margin-top: 12px; font-size: 13px; font-weight: 300;
-  line-height: 1.6; padding: 12px 16px; display: none;
-}
-
+.q-feedback { margin-top: 10px; font-size: 13px; font-weight: 300; line-height: 1.6; padding: 10px 16px; display: none; }
 .q-feedback.correct { display: block; color: rgba(140,200,140,0.85); border-left: 2px solid rgba(60,120,70,0.5); }
 .q-feedback.incorrect { display: block; color: rgba(200,140,140,0.85); border-left: 2px solid rgba(150,50,50,0.4); }
-
-.quiz-submit-wrap { text-align: center; margin-top: 60px; }
-
-.quiz-submit {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 10px; font-weight: 400;
-  letter-spacing: 3px; text-transform: uppercase;
-  background: var(--gold); color: var(--navy-deep);
-  border: none; padding: 18px 56px;
-  cursor: pointer; transition: background 0.2s, transform 0.18s;
-}
-
+.quiz-submit-wrap { text-align: center; margin-top: 56px; }
+.quiz-submit { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; background: var(--gold); color: var(--navy-deep); border: none; padding: 18px 56px; cursor: pointer; transition: background 0.2s, transform 0.18s; }
 .quiz-submit:hover { background: var(--gold-pale); transform: translateY(-2px); }
-
-.quiz-score {
-  display: none; margin-top: 56px;
-  background: rgba(184,150,62,0.05);
-  border: 1px solid rgba(184,150,62,0.15);
-  padding: 56px; text-align: center;
-}
-
+.quiz-score { display: none; margin-top: 52px; background: rgba(184,150,62,0.05); border: 1px solid rgba(184,150,62,0.15); padding: 52px; text-align: center; }
 .quiz-score.show { display: block; }
+.score-num { font-family: 'Cormorant Garamond', serif; font-size: 5.5rem; font-weight: 300; color: var(--gold); line-height: 1; margin-bottom: 6px; }
+.score-of { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(245,240,232,0.3); margin-bottom: 20px; display: block; }
+.score-msg { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-style: italic; color: rgba(245,240,232,0.65); line-height: 1.7; }
 
-.score-num {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 5.5rem; font-weight: 300;
-  color: var(--gold); line-height: 1; margin-bottom: 6px;
-}
-
-.score-of {
-  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(245,240,232,0.3); margin-bottom: 24px; display: block;
-}
-
-.score-msg {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.2rem; font-style: italic;
-  color: rgba(245,240,232,0.65); line-height: 1.7;
-}
-
-/* ═══════════════════════════════
-   MORE EXERCISES
-═══════════════════════════════ */
-.more-exercises {
-  background: var(--navy-mid);
-  padding: 90px 10vw;
-  display: flex; justify-content: space-between;
-  align-items: center; gap: 60px; flex-wrap: wrap;
-  border-top: 1px solid rgba(184,150,62,0.08);
-}
-
-.more-left {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(22px, 3vw, 34px);
-  font-weight: 300; line-height: 1.45;
-  color: var(--cream); max-width: 440px;
-}
-
+/* ═══ MORE / FOOTER ═══ */
+.more-exercises { background: var(--navy-mid); padding: 80px 10vw; display: flex; justify-content: space-between; align-items: center; gap: 50px; flex-wrap: wrap; border-top: 1px solid rgba(184,150,62,0.08); }
+.more-left { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 2.8vw, 30px); font-weight: 300; line-height: 1.45; color: var(--cream); max-width: 400px; }
 .more-left em { font-style: italic; color: var(--gold-light); }
-
-.btn-more {
-  display: inline-flex; align-items: center; gap: 14px;
-  font-size: 10px; font-weight: 400;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--cream); text-decoration: none;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(184,150,62,0.3);
-  transition: color 0.25s, border-color 0.25s;
-}
-
+.more-links { display: flex; flex-direction: column; gap: 16px; }
+.btn-more { display: inline-flex; align-items: center; gap: 14px; font-size: 10px; font-weight: 400; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cream); text-decoration: none; padding-bottom: 4px; border-bottom: 1px solid rgba(184,150,62,0.25); transition: color 0.25s, border-color 0.25s; }
 .btn-more:hover { color: var(--gold-light); border-color: var(--gold-light); }
-
+.btn-more.secondary { color: rgba(245,240,232,0.4); border-bottom-color: rgba(184,150,62,0.1); }
+.btn-more.secondary:hover { color: rgba(245,240,232,0.7); border-bottom-color: rgba(184,150,62,0.3); }
 .btn-arrow { transition: transform 0.25s; }
 .btn-more:hover .btn-arrow { transform: translateX(4px); }
+footer { background: var(--navy); padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-top: 1px solid rgba(184,150,62,0.08); }
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(184,150,62,0.5); }
+.footer-copy { font-size: 11px; color: rgba(245,240,232,0.2); }
 
-/* ═══════════════════════════════
-   FOOTER
-═══════════════════════════════ */
-footer {
-  background: var(--navy);
-  padding: 30px 60px;
-  display: flex; justify-content: space-between;
-  align-items: center; flex-wrap: wrap; gap: 14px;
-  border-top: 1px solid rgba(184,150,62,0.08);
-}
+/* ═══ ANIMATIONS ═══ */
+@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideRight { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes scrollDown { 0% { top: -100%; } 100% { top: 200%; } }
+@keyframes shake { 0%,100%{ transform: translateX(0); } 20%{ transform: translateX(-7px); } 40%{ transform: translateX(7px); } 60%{ transform: translateX(-5px); } 80%{ transform: translateX(5px); } }
 
-.footer-brand {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(184,150,62,0.5);
-}
-
-.footer-copy {
-  font-size: 11px; color: rgba(245,240,232,0.2); letter-spacing: 0.3px;
-}
-
-/* ═══════════════════════════════
-   ANIMATIONS
-═══════════════════════════════ */
-@keyframes appear {
-  from { opacity: 0; } to { opacity: 1; }
-}
-@keyframes slideRight {
-  from { opacity: 0; transform: translateX(-18px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes scrollDown {
-  0%   { top: -100%; }
-  100% { top: 200%; }
-}
-@keyframes shake {
-  0%,100%{ transform: translateX(0); }
-  20%{ transform: translateX(-7px); }
-  40%{ transform: translateX(7px); }
-  60%{ transform: translateX(-5px); }
-  80%{ transform: translateX(5px); }
-}
-
-/* ═══════════════════════════════
-   RESPONSIVE
-═══════════════════════════════ */
-@media (max-width: 900px) {
-  header { padding: 22px 28px; }
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 800px) {
+  header { padding: 20px 24px; }
   .header-nav { display: none; }
-  .opening-body { padding: 120px 28px 60px; }
-  .opening-footer { padding: 0 28px 44px; }
-  .page-body { grid-template-columns: 1fr; padding: 0 28px 60px; }
-  .main-content { padding: 60px 0; border-right: none; border-bottom: 1px solid var(--rule); }
-  .sidebar { position: static; padding: 40px 0 0; }
-  footer { padding: 26px 28px; }
-  .more-exercises { flex-direction: column; align-items: flex-start; padding: 60px 28px; }
-  .quiz-inner { padding: 0 28px; }
-  .sentence-row { grid-template-columns: 68px 1fr; }
+  .opening-body { padding: 110px 24px 60px; }
+  .opening-footer { padding: 0 24px 40px; }
+  .page-body { padding: 60px 24px 80px; }
+  .acc-content { padding: 0 0 24px 24px; }
+  .sentence-row { grid-template-columns: 60px 1fr; }
+  .quiz-inner { padding: 0 24px; }
+  .more-exercises { flex-direction: column; align-items: flex-start; padding: 60px 24px; }
+  footer { padding: 24px; }
+  .qw-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- ══ PIN SCREEN ══ -->
+<!-- PIN -->
 <div id="pin-screen">
   <div class="pin-inner">
-    <div class="pin-eyebrow">
-      <div class="pin-eyebrow-line"></div>
-      <span class="pin-eyebrow-text">Instituto MD Talk</span>
-    </div>
+    <div class="pin-eyebrow"><div class="pin-eyebrow-line"></div><span class="pin-eyebrow-text">Instituto MD Talk</span></div>
     <h2 class="pin-title">Present <em>Simple</em></h2>
     <div class="pin-rule"></div>
     <p class="pin-sub">Grammar Foundation · A1–A2</p>
     <p class="pin-label">Enter access PIN</p>
     <div class="pin-dots">
-      <div class="pin-dot" id="d0"></div>
-      <div class="pin-dot" id="d1"></div>
-      <div class="pin-dot" id="d2"></div>
-      <div class="pin-dot" id="d3"></div>
+      <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
     </div>
     <div class="pin-keypad">
-      <button class="pin-key" data-v="1">1</button>
-      <button class="pin-key" data-v="2">2</button>
-      <button class="pin-key" data-v="3">3</button>
-      <button class="pin-key" data-v="4">4</button>
-      <button class="pin-key" data-v="5">5</button>
-      <button class="pin-key" data-v="6">6</button>
-      <button class="pin-key" data-v="7">7</button>
-      <button class="pin-key" data-v="8">8</button>
-      <button class="pin-key" data-v="9">9</button>
-      <button class="pin-key key-empty"></button>
-      <button class="pin-key" data-v="0">0</button>
-      <button class="pin-key key-del" data-v="del">⌫</button>
+      <button class="pin-key" data-v="1">1</button><button class="pin-key" data-v="2">2</button><button class="pin-key" data-v="3">3</button>
+      <button class="pin-key" data-v="4">4</button><button class="pin-key" data-v="5">5</button><button class="pin-key" data-v="6">6</button>
+      <button class="pin-key" data-v="7">7</button><button class="pin-key" data-v="8">8</button><button class="pin-key" data-v="9">9</button>
+      <button class="pin-key key-empty"></button><button class="pin-key" data-v="0">0</button><button class="pin-key key-del" data-v="del">⌫</button>
     </div>
     <p class="pin-error" id="pin-error">Incorrect PIN. Please try again.</p>
   </div>
 </div>
 
-<!-- ══ PAGE ══ -->
 <div id="page">
 
 <header id="header">
@@ -893,50 +347,50 @@ footer {
     <a href="#phase2">Phase 2</a>
     <a href="#phase3">Phase 3</a>
     <a href="#phase4">Phase 4</a>
-    <a href="#verbs">Verbs</a>
+    <a href="#reference">Reference</a>
     <a href="#quiz">Quiz</a>
   </nav>
 </header>
 
-<!-- HERO -->
 <section class="opening">
   <div class="opening-body">
-    <div class="eyebrow">
-      <div class="eyebrow-line"></div>
-      <span class="eyebrow-text">Grammar Foundation · A1–A2</span>
-    </div>
+    <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">Grammar Foundation · A1–A2</span></div>
     <h1>Present<br><em>Simple.</em></h1>
     <p class="opening-desc">The four phases of affirmative, interrogative and negative forms — with auxiliaries DO and DOES, across all persons.</p>
   </div>
   <div class="opening-footer">
-    <div class="opening-scroll">
-      <div class="scroll-track"><div class="scroll-thumb"></div></div>
-      <span class="scroll-label">Explore</span>
-    </div>
-    <div class="opening-tag">
-      <span class="tag-label">Método</span>
-      <span class="tag-value">MD Talk</span>
-    </div>
+    <div class="opening-scroll"><div class="scroll-track"><div class="scroll-thumb"></div></div><span class="scroll-label">Explore</span></div>
+    <div class="opening-tag"><span class="tag-label">Método</span><span class="tag-value">MD Talk</span></div>
   </div>
 </section>
 
 <div class="page-body">
-<main class="main-content">
 
   <!-- PHASE 1 -->
   <section class="section" id="phase1" data-reveal>
     <span class="section-kicker">Phase 01</span>
     <h2 class="section-title">The Basic Form</h2>
-    <div class="phase-block">
-      <div class="phase-block-head">
-        <div class="phase-roman">I</div>
-        <div class="phase-block-name">Subject + Verb — <em>I / You / We / They</em></div>
+    <div class="acc-list">
+
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">I</span>
+            <span class="acc-trigger-label">Subject + Verb — <em>I / You / We / They</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="sentence-group">
+              <div class="sentence-row aff"><span class="s-type">Affirmative</span><span class="s-text">You work at the hospital.</span></div>
+              <div class="sentence-row q"><span class="s-type">Question</span><span class="s-text"><span class="aux">DO</span> you work at the hospital?</span></div>
+              <div class="sentence-row neg"><span class="s-type">Negative</span><span class="s-text">You <span class="aux">don't</span> work at the hospital.</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="sentence-group">
-        <div class="sentence-row aff"><span class="s-type">Affirmative</span><span class="s-text">You work at the hospital.</span></div>
-        <div class="sentence-row q"><span class="s-type">Question</span><span class="s-text"><span class="aux">DO</span> you work at the hospital?</span></div>
-        <div class="sentence-row neg"><span class="s-type">Negative</span><span class="s-text">You <span class="aux">don't</span> work at the hospital.</span></div>
-      </div>
+
     </div>
   </section>
 
@@ -944,16 +398,27 @@ footer {
   <section class="section" id="phase2" data-reveal>
     <span class="section-kicker">Phase 02</span>
     <h2 class="section-title">Adding Elements</h2>
-    <div class="phase-block">
-      <div class="phase-block-head">
-        <div class="phase-roman">II</div>
-        <div class="phase-block-name">With time expressions — <em>the sentence gains context</em></div>
+    <div class="acc-list">
+
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">II</span>
+            <span class="acc-trigger-label">With time expressions — <em>the sentence gains context</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="sentence-group">
+              <div class="sentence-row aff"><span class="s-type">Affirmative</span><span class="s-text">You work at the hospital <strong>every weekend</strong>.</span></div>
+              <div class="sentence-row q"><span class="s-type">Question</span><span class="s-text"><span class="aux">DO</span> you work at the hospital <strong>every weekend</strong>?</span></div>
+              <div class="sentence-row neg"><span class="s-type">Negative</span><span class="s-text">You <span class="aux">don't</span> work at the hospital <strong>every weekend</strong>.</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="sentence-group">
-        <div class="sentence-row aff"><span class="s-type">Affirmative</span><span class="s-text">You work at the hospital <strong>every weekend</strong>.</span></div>
-        <div class="sentence-row q"><span class="s-type">Question</span><span class="s-text"><span class="aux">DO</span> you work at the hospital <strong>every weekend</strong>?</span></div>
-        <div class="sentence-row neg"><span class="s-type">Negative</span><span class="s-text">You <span class="aux">don't</span> work at the hospital <strong>every weekend</strong>.</span></div>
-      </div>
+
     </div>
   </section>
 
@@ -961,44 +426,66 @@ footer {
   <section class="section" id="phase3" data-reveal>
     <span class="section-kicker">Phase 03</span>
     <h2 class="section-title">Question Words</h2>
-    <div class="phase-block">
-      <div class="phase-block-head">
-        <div class="phase-roman">III</div>
-        <div class="phase-block-name">Wh- questions — <em>opening with intention</em></div>
-      </div>
-      <div class="sentence-group">
-        <div class="sentence-row q"><span class="s-type">Why</span><span class="s-text"><strong>Why</strong> <span class="aux">DO</span> you work at the hospital every weekend?</span></div>
-        <div class="sentence-row q"><span class="s-type">Where</span><span class="s-text"><strong>Where</strong> <span class="aux">DO</span> you work <span class="strike">at the hospital</span> every weekend?</span></div>
-      </div>
-    </div>
+    <div class="acc-list">
 
-    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:var(--navy);margin:48px 0 6px;">Question Words Reference</h3>
-    <p style="font-size:13px;font-weight:300;color:var(--muted);margin-bottom:0;">Hover each card to explore sub-types.</p>
-    <div class="qw-grid">
-      <div class="qw-cell"><div class="qw-word">Why</div><div class="qw-pt">por quê</div></div>
-      <div class="qw-cell">
-        <div class="qw-word">How</div><div class="qw-pt">como</div>
-        <div class="qw-sub-item"><span>how much</span><span class="qw-sub-pt">incontáveis</span></div>
-        <div class="qw-sub-item"><span>how many</span><span class="qw-sub-pt">contáveis</span></div>
-        <div class="qw-sub-item"><span>how often</span><span class="qw-sub-pt">com que frequência</span></div>
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">III</span>
+            <span class="acc-trigger-label">Wh- questions — <em>opening with intention</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="sentence-group">
+              <div class="sentence-row q"><span class="s-type">Why</span><span class="s-text"><strong>Why</strong> <span class="aux">DO</span> you work at the hospital every weekend?</span></div>
+              <div class="sentence-row q"><span class="s-type">Where</span><span class="s-text"><strong>Where</strong> <span class="aux">DO</span> you work <span class="strike">at the hospital</span> every weekend?</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="qw-cell">
-        <div class="qw-word">What</div><div class="qw-pt">o quê / qual</div>
-        <div class="qw-sub-item"><span>what kind</span></div>
-        <div class="qw-sub-item"><span>what type</span></div>
-        <div class="qw-sub-item"><span>what time</span><span class="qw-sub-pt">que horas</span></div>
+
+      <div class="acc-item">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">—</span>
+            <span class="acc-trigger-label">Question Words — <em>reference grid</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="qw-grid">
+              <div class="qw-cell"><div class="qw-word">Why</div><div class="qw-pt">por quê</div></div>
+              <div class="qw-cell">
+                <div class="qw-word">How</div><div class="qw-pt">como</div>
+                <div class="qw-sub-item"><span>how much</span><span class="qw-sub-pt">incontáveis</span></div>
+                <div class="qw-sub-item"><span>how many</span><span class="qw-sub-pt">contáveis</span></div>
+                <div class="qw-sub-item"><span>how often</span><span class="qw-sub-pt">com que frequência</span></div>
+              </div>
+              <div class="qw-cell">
+                <div class="qw-word">What</div><div class="qw-pt">o quê / qual</div>
+                <div class="qw-sub-item"><span>what kind</span></div>
+                <div class="qw-sub-item"><span>what type</span></div>
+                <div class="qw-sub-item"><span>what time</span><span class="qw-sub-pt">que horas</span></div>
+              </div>
+              <div class="qw-cell">
+                <div class="qw-word">Which</div><div class="qw-pt">qual (com opções)</div>
+                <div class="qw-sub-item"><span style="font-style:italic;font-size:11px;">Which do you prefer: Pepsi or Coca-Cola?</span></div>
+              </div>
+              <div class="qw-cell">
+                <div class="qw-word">Whose</div><div class="qw-pt">de quem / cujo</div>
+                <div class="qw-sub-item"><span style="font-style:italic;font-size:11px;">Whose coat is this?</span></div>
+                <div class="qw-sub-item"><span style="font-style:italic;font-size:11px;">Lilian, whose white coat is here, went home.</span></div>
+              </div>
+              <div class="qw-cell"><div class="qw-word">When</div><div class="qw-pt">quando</div></div>
+              <div class="qw-cell" style="grid-column:span 2"><div class="qw-word">Where</div><div class="qw-pt">onde</div></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="qw-cell">
-        <div class="qw-word">Which</div><div class="qw-pt">qual (com opções)</div>
-        <div class="qw-sub-item"><span style="font-style:italic;font-size:12px;">Which do you prefer: Pepsi or Coca-Cola?</span></div>
-      </div>
-      <div class="qw-cell">
-        <div class="qw-word">Whose</div><div class="qw-pt">de quem / cujo</div>
-        <div class="qw-sub-item"><span style="font-style:italic;font-size:12px;">Whose coat is this?</span></div>
-        <div class="qw-sub-item"><span style="font-style:italic;font-size:12px;">Lilian, whose white coat is here, went home.</span></div>
-      </div>
-      <div class="qw-cell"><div class="qw-word">When</div><div class="qw-pt">quando</div></div>
-      <div class="qw-cell" style="grid-column:span 2"><div class="qw-word">Where</div><div class="qw-pt">onde</div></div>
+
     </div>
   </section>
 
@@ -1006,90 +493,179 @@ footer {
   <section class="section" id="phase4" data-reveal>
     <span class="section-kicker">Phase 04</span>
     <h2 class="section-title">He, She, It — DOES</h2>
-    <div class="phase-block">
-      <div class="phase-block-head">
-        <div class="phase-roman">IV</div>
-        <div class="phase-block-name">Third person singular — <em>the verb changes, the auxiliary changes</em></div>
-      </div>
-      <div class="sentence-group">
-        <div class="sentence-row aff"><span class="s-type">Affirmative</span><span class="s-text">She / Lilian <strong>works</strong> at the hospital.</span></div>
-        <div class="sentence-row q"><span class="s-type">Question</span><span class="s-text"><span class="aux-does">DOES</span> she work at the hospital?</span></div>
-        <div class="sentence-row neg"><span class="s-type">Negative</span><span class="s-text">She <span class="aux-does">doesn't</span> work at the hospital.</span></div>
-      </div>
-    </div>
+    <div class="acc-list">
 
-    <div class="phase-block">
-      <div class="phase-block-head">
-        <div class="phase-roman">—</div>
-        <div class="phase-block-name">Clinical examples — <em>Laura & Sofia</em></div>
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">IV</span>
+            <span class="acc-trigger-label">Third person singular — <em>the verb changes, the auxiliary changes</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="sentence-group">
+              <div class="sentence-row aff"><span class="s-type">Affirmative</span><span class="s-text">She / Lilian <strong>works</strong> at the hospital.</span></div>
+              <div class="sentence-row q"><span class="s-type">Question</span><span class="s-text"><span class="aux-does">DOES</span> she work at the hospital?</span></div>
+              <div class="sentence-row neg"><span class="s-type">Negative</span><span class="s-text">She <span class="aux-does">doesn't</span> work at the hospital.</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="sentence-group">
-        <div class="sentence-row q"><span class="s-type">Plural</span><span class="s-text"><span class="aux">DO</span> Laura and Sofia like playing together? → <em>they</em></span></div>
-        <div class="sentence-row q"><span class="s-type">Singular</span><span class="s-text"><span class="aux-does">DOES</span> Laura <strong>fall asleep</strong> easily?</span></div>
-        <div class="sentence-row aff"><span class="s-type">Answer</span><span class="s-text">Yes, she <span class="aux-does">does</span>.</span></div>
-        <div class="sentence-row q"><span class="s-type">Singular</span><span class="s-text"><span class="aux-does">DOES</span> Sofia sleep all night?</span></div>
-        <div class="sentence-row aff"><span class="s-type">Answer</span><span class="s-text">Yes, she <span class="aux-does">does</span>.</span></div>
-        <div class="sentence-row q"><span class="s-type">Plural</span><span class="s-text"><span class="aux">DO</span> they sleep together?</span></div>
-        <div class="sentence-row aff"><span class="s-type">Answer</span><span class="s-text">Yes, they <span class="aux">do</span>.</span></div>
-      </div>
-    </div>
 
-    <div class="golden-rule">
-      <span class="gr-label">Golden Rule — Regra de Ouro</span>
-      <p class="gr-text">Whenever we have an auxiliary — <strong>DO, DOES, DID, WILL, WOULD</strong> + modal verbs — the main verb will <strong>always be in its neutral (base) form</strong>.</p>
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">—</span>
+            <span class="acc-trigger-label">Clinical examples — <em>Laura & Sofia</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="sentence-group">
+              <div class="sentence-row q"><span class="s-type">Plural</span><span class="s-text"><span class="aux">DO</span> Laura and Sofia like playing together? → <em>they</em></span></div>
+              <div class="sentence-row q"><span class="s-type">Singular</span><span class="s-text"><span class="aux-does">DOES</span> Laura <strong>fall asleep</strong> easily?</span></div>
+              <div class="sentence-row aff"><span class="s-type">Answer</span><span class="s-text">Yes, she <span class="aux-does">does</span>.</span></div>
+              <div class="sentence-row q"><span class="s-type">Singular</span><span class="s-text"><span class="aux-does">DOES</span> Sofia sleep all night?</span></div>
+              <div class="sentence-row aff"><span class="s-type">Answer</span><span class="s-text">Yes, she <span class="aux-does">does</span>.</span></div>
+              <div class="sentence-row q"><span class="s-type">Plural</span><span class="s-text"><span class="aux">DO</span> they sleep together?</span></div>
+              <div class="sentence-row aff"><span class="s-type">Answer</span><span class="s-text">Yes, they <span class="aux">do</span>.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">★</span>
+            <span class="acc-trigger-label">Golden Rule — <em>Regra de Ouro</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="golden-rule">
+              <span class="gr-label">Regra de Ouro</span>
+              <p class="gr-text">Whenever we have an auxiliary — <strong>DO, DOES, DID, WILL, WOULD</strong> + modal verbs — the main verb will <strong>always be in its neutral (base) form</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- VERBS -->
-  <section class="section" id="verbs" data-reveal>
+  <!-- REFERENCE -->
+  <section class="section" id="reference" data-reveal>
     <span class="section-kicker">Reference</span>
-    <h2 class="section-title">Common Verbs & Short Answers</h2>
-    <div class="verb-strip">
-      <span class="verb-pill">Play</span><span class="verb-pill">Work</span><span class="verb-pill">Study</span>
-      <span class="verb-pill">Run</span><span class="verb-pill">Stop</span><span class="verb-pill">Drive</span>
-      <span class="verb-pill">Travel</span><span class="verb-pill">Eat</span><span class="verb-pill">Drink</span><span class="verb-pill">Go</span>
-    </div>
-    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:var(--navy);margin:44px 0 16px;">Short Answers</h3>
-    <div class="answer-pair">
-      <div class="answer-card answer-yes">Yes, I <strong>do</strong>.</div>
-      <div class="answer-card answer-no">No, I <strong>don't</strong>.</div>
-    </div>
-    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:var(--navy);margin:44px 0 16px;">In Practice — Drive</h3>
-    <div class="dialogue-block">
-      <div class="d-line"><span class="d-speaker">Q</span><span class="d-text">Do you drive?</span></div>
-      <div class="d-line"><span class="d-speaker">A</span><span class="d-text">Yes, I do, but I <strong>usually</strong> don't drive on the road.<span class="pronun">usually → iu.jua.li</span></span></div>
+    <h2 class="section-title">Common Verbs & Answers</h2>
+    <div class="acc-list">
+
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">—</span>
+            <span class="acc-trigger-label">Common Verbs</span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="verb-strip">
+              <span class="verb-pill">Play</span><span class="verb-pill">Work</span><span class="verb-pill">Study</span>
+              <span class="verb-pill">Run</span><span class="verb-pill">Stop</span><span class="verb-pill">Drive</span>
+              <span class="verb-pill">Travel</span><span class="verb-pill">Eat</span><span class="verb-pill">Drink</span><span class="verb-pill">Go</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">—</span>
+            <span class="acc-trigger-label">Short Answers</span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="answer-pair">
+              <div class="answer-card">Yes, I <strong>do</strong>.</div>
+              <div class="answer-card">No, I <strong>don't</strong>.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item open">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">—</span>
+            <span class="acc-trigger-label">In Practice — <em>Do you drive?</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="dialogue-block">
+              <div class="d-line"><span class="d-speaker">Q</span><span class="d-text">Do you drive?</span></div>
+              <div class="d-line"><span class="d-speaker">A</span><span class="d-text">Yes, I do, but I <strong>usually</strong> don't drive on the road.<span class="pronun">usually → iu.jua.li</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">+</span>
+            <span class="acc-trigger-label">Vocabulary Notes — <em>fall asleep · sleep · usually</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="adendo">
+              <span class="adendo-label">Vocabulário</span>
+              <div class="adendo-row">
+                <div class="adendo-item"><strong>fall asleep</strong><br><em>adormecer — o momento de transição para o sono</em></div>
+                <div class="adendo-item"><strong>sleep</strong><br><em>o ato de dormir em si, o estado de sono</em></div>
+                <div class="adendo-item"><strong>usually</strong> → /ˈjuː.ʒu.ə.li/<br><em>iu.jua.li · geralmente</em></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger">
+          <div class="acc-trigger-left">
+            <span class="acc-num">+</span>
+            <span class="acc-trigger-label">Whose — <em>dupla função</em></span>
+          </div>
+          <div class="acc-icon"></div>
+        </button>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="adendo">
+              <span class="adendo-label">Gramática</span>
+              <div class="adendo-row">
+                <div class="adendo-item"><strong>Pergunta</strong> — de quem<br><em>"Whose coat is this?"</em></div>
+                <div class="adendo-item"><strong>Em frases</strong> — cujo/cuja<br><em>"Lilian, whose white coat is here, went home."</em></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
-</main>
-
-<aside class="sidebar">
-  <div class="sidebar-note">
-    <span class="sn-label">Vocabulário</span>
-    <p class="sn-text"><em>fall asleep</em><br>adormecer — o momento de transição para o sono</p>
-  </div>
-  <div class="sidebar-note">
-    <span class="sn-label">Vocabulário</span>
-    <p class="sn-text"><em>sleep</em><br>o ato de dormir em si, o estado de sono</p>
-  </div>
-  <div class="sidebar-note">
-    <span class="sn-label">Pronúncia</span>
-    <p class="sn-text"><em>usually</em><br>/ˈjuː.ʒu.ə.li/<br><strong>iu.jua.li</strong></p>
-  </div>
-  <div class="sidebar-note">
-    <span class="sn-label">Regra Importante</span>
-    <p class="sn-text">Com <em>DOES</em>, o verbo <strong>não recebe -s</strong>:<br>She <strong>works</strong> → DOES she <strong>work</strong>?</p>
-  </div>
-  <div class="sidebar-note">
-    <span class="sn-label">Whose — Dupla Função</span>
-    <p class="sn-text">Pergunta: <em>de quem</em><br>"Whose coat is this?"<br><br>Em frases: <em>cujo/cuja</em><br>"Lilian, <strong>whose</strong> coat is here, went home."</p>
-  </div>
-  <div class="sidebar-note">
-    <span class="sn-label">How vs. How Much/Many</span>
-    <p class="sn-text"><em>how much</em> → incontáveis<br><em>how many</em> → contáveis<br><em>how often</em> → frequência</p>
-  </div>
-</aside>
-</div>
+</div><!-- .page-body -->
 
 <!-- QUIZ -->
 <section id="quiz">
@@ -1111,19 +687,11 @@ footer {
   </div>
 </section>
 
-<!-- MORE EXERCISES -->
 <div class="more-exercises">
-  <div class="more-left">
-    Continue practising.<br>
-    <em>More exercises await.</em>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start;">
-    <a href="exercises-present-simple.html" class="btn-more">
-      Access Extra Exercises <span class="btn-arrow">&#8594;</span>
-    </a>
-    <a href="https://institutomdtalk.github.io/portaldoaluno/" class="btn-more" style="color:rgba(245,240,232,0.45);border-bottom-color:rgba(184,150,62,0.15);">
-      Return to Student Portal <span class="btn-arrow">&#8594;</span>
-    </a>
+  <div class="more-left">Continue practising.<br><em>More exercises await.</em></div>
+  <div class="more-links">
+    <a href="exercises-present-simple.html" class="btn-more">Access Extra Exercises <span class="btn-arrow">&#8594;</span></a>
+    <a href="https://institutomdtalk.github.io/portaldoaluno/" class="btn-more secondary">Return to Student Portal <span class="btn-arrow">&#8594;</span></a>
   </div>
 </div>
 
@@ -1138,76 +706,56 @@ footer {
 /* ── PIN ── */
 const CORRECT = '2204';
 let entered = '';
-
 function updateDots() {
-  for (let i = 0; i < 4; i++)
-    document.getElementById('d' + i).classList.toggle('filled', i < entered.length);
+  for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.toggle('filled', i < entered.length);
 }
-
 function shakeError() {
   const dots = document.querySelector('.pin-dots');
   dots.style.animation = 'shake 0.45s ease';
   document.getElementById('pin-error').classList.add('show');
-  setTimeout(() => {
-    document.getElementById('pin-error').classList.remove('show');
-    dots.style.animation = '';
-  }, 1800);
+  setTimeout(() => { document.getElementById('pin-error').classList.remove('show'); dots.style.animation = ''; }, 1800);
 }
-
 function unlock() {
   document.getElementById('pin-screen').classList.add('unlocking');
-  setTimeout(() => {
-    document.getElementById('pin-screen').style.display = 'none';
-    document.getElementById('page').classList.add('revealed');
-  }, 900);
+  setTimeout(() => { document.getElementById('pin-screen').style.display = 'none'; document.getElementById('page').classList.add('revealed'); }, 900);
 }
-
 document.querySelectorAll('.pin-key').forEach(key => {
   key.addEventListener('click', () => {
-    const v = key.dataset.v;
-    if (!v) return;
-    key.classList.add('pressed');
-    setTimeout(() => key.classList.remove('pressed'), 140);
+    const v = key.dataset.v; if (!v) return;
+    key.classList.add('pressed'); setTimeout(() => key.classList.remove('pressed'), 140);
     if (v === 'del') { entered = entered.slice(0, -1); updateDots(); return; }
     if (entered.length >= 4) return;
-    entered += v;
-    updateDots();
-    if (entered.length === 4) {
-      setTimeout(() => {
-        if (entered === CORRECT) { unlock(); }
-        else { entered = ''; updateDots(); shakeError(); }
-      }, 200);
-    }
+    entered += v; updateDots();
+    if (entered.length === 4) setTimeout(() => { if (entered === CORRECT) unlock(); else { entered = ''; updateDots(); shakeError(); } }, 200);
   });
 });
-
 document.addEventListener('keydown', e => {
   if (document.getElementById('pin-screen').style.display === 'none') return;
   if (e.key >= '0' && e.key <= '9') document.querySelector(`.pin-key[data-v="${e.key}"]`)?.click();
   if (e.key === 'Backspace') document.querySelector('.pin-key[data-v="del"]')?.click();
 });
 
+/* ── ACCORDION ── */
+document.querySelectorAll('.acc-trigger').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.acc-item');
+    item.classList.toggle('open');
+  });
+});
+
 /* ── SCROLL REVEAL ── */
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); obs.unobserve(e.target); } });
-}, { threshold: 0.1 });
+}, { threshold: 0.08 });
 document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
 
-/* ── HEADER SCROLL ── */
+/* ── HEADER ── */
 const header = document.getElementById('header');
 window.addEventListener('scroll', () => {
   header.classList.toggle('scrolled', window.scrollY > 60);
-});
-
-/* ── ACTIVE NAV ── */
-window.addEventListener('scroll', () => {
   let cur = '';
-  document.querySelectorAll('section[id]').forEach(s => {
-    if (window.scrollY >= s.offsetTop - 120) cur = s.id;
-  });
-  document.querySelectorAll('.header-nav a').forEach(a =>
-    a.classList.toggle('active', a.getAttribute('href') === `#${cur}`)
-  );
+  document.querySelectorAll('section[id]').forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+  document.querySelectorAll('.header-nav a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${cur}`));
 });
 
 /* ── QUIZ ── */
@@ -1239,15 +787,7 @@ function renderQuiz() {
   questions.forEach((q, i) => {
     const item = document.createElement('div');
     item.className = 'quiz-item';
-    item.innerHTML = `
-      <div class="q-num">Question ${i + 1} / 20</div>
-      <div class="q-text">${q.q}</div>
-      <div class="q-options">${q.options.map((opt, j) => `
-        <label class="q-option" id="opt-${i}-${j}">
-          <input type="radio" name="q${i}" value="${j}">
-          <label>${opt}</label>
-        </label>`).join('')}</div>
-      <div class="q-feedback" id="fb-${i}"></div>`;
+    item.innerHTML = `<div class="q-num">Question ${i + 1} / 20</div><div class="q-text">${q.q}</div><div class="q-options">${q.options.map((opt, j) => `<label class="q-option" id="opt-${i}-${j}"><input type="radio" name="q${i}" value="${j}"><label>${opt}</label></label>`).join('')}</div><div class="q-feedback" id="fb-${i}"></div>`;
     c.appendChild(item);
   });
 }
@@ -1259,20 +799,16 @@ function submitQuiz() {
     const fb = document.getElementById(`fb-${i}`);
     document.querySelectorAll(`input[name="q${i}"]`).forEach(r => r.disabled = true);
     if (!sel) { fb.className = 'q-feedback incorrect'; fb.textContent = `No answer. Correct: "${q.options[q.answer]}" — ${q.feedback}`; return; }
-    const c = parseInt(sel.value);
-    document.getElementById(`opt-${i}-${c}`).classList.add(c === q.answer ? 'correct' : 'wrong');
-    if (c !== q.answer) document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct');
-    if (c === q.answer) { score++; fb.className = 'q-feedback correct'; fb.textContent = `✓ Correct! ${q.feedback}`; }
+    const ch = parseInt(sel.value);
+    document.getElementById(`opt-${i}-${ch}`).classList.add(ch === q.answer ? 'correct' : 'wrong');
+    if (ch !== q.answer) document.getElementById(`opt-${i}-${q.answer}`).classList.add('correct');
+    if (ch === q.answer) { score++; fb.className = 'q-feedback correct'; fb.textContent = `✓ Correct! ${q.feedback}`; }
     else { fb.className = 'q-feedback incorrect'; fb.textContent = `✗ Incorrect. Correct: "${q.options[q.answer]}" — ${q.feedback}`; }
   });
-  const el = document.getElementById('quiz-score');
   document.getElementById('score-num').textContent = `${score}/20`;
   const pct = score / 20 * 100;
-  document.getElementById('score-msg').textContent =
-    pct === 100 ? "Perfect score. Exceptional command of the Present Simple." :
-    pct >= 80   ? "Excellent work. You have a strong foundation in the Present Simple." :
-    pct >= 60   ? "Good progress. Review the phases where you made mistakes and practise again." :
-                  "Keep going — revisit the lesson notes and try again. Every repetition builds fluency.";
+  document.getElementById('score-msg').textContent = pct === 100 ? "Perfect score. Exceptional command of the Present Simple." : pct >= 80 ? "Excellent work. Strong foundation in the Present Simple." : pct >= 60 ? "Good progress. Review the phases where you made mistakes." : "Keep going — revisit the lesson notes and try again.";
+  const el = document.getElementById('quiz-score');
   el.classList.add('show');
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   const btn = document.querySelector('.quiz-submit');
